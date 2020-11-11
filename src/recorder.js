@@ -1,53 +1,38 @@
-import RecordRTC, { StereoAudioRecorder } from "recordrtc";
+import { RecordRTCPromisesHandler, StereoAudioRecorder } from "recordrtc";
 
-var recorder; // globally accessible
+let stream;
+let recorder;
 
-const audio = new Audio();
-
-function captureMicrophone(callback) {
-  navigator.mediaDevices
-    .getUserMedia({ audio: true })
-    .then(callback)
-    .catch(function (error) {
-      alert("Unable to access your microphone.");
-      console.error(error);
+async function init() {
+  try {
+    stream = await navigator.mediaDevices.getUserMedia({
+      audio: true,
     });
+  } catch (error) {
+    alert("Unable to access your microphone.");
+    console.error(error);
+  }
 }
 
-function startRecording() {
-  // this.disabled = true;
-  captureMicrophone(function (microphone) {
-    audio.srcObject = microphone;
+async function start() {
+  await init();
 
-    recorder = RecordRTC(microphone, {
-      type: "audio",
-      recorderType: StereoAudioRecorder,
-      desiredSampRate: 16000,
-    });
-
-    recorder.startRecording();
-
-    // release microphone on stopRecording
-    recorder.microphone = microphone;
-
-    // document.getElementById("btn-stop-recording").disabled = false;
+  recorder = new RecordRTCPromisesHandler(stream, {
+    type: "audio",
+    recorderType: StereoAudioRecorder,
+    desiredSampRate: 16000,
   });
-}
 
-function start() {
-  startRecording();
+  recorder.startRecording();
 }
 
 async function stop() {
-  recorder.stopRecording(() => {
-    audio.srcObject = null;
-    var blob = recorder.getBlob();
-    audio.src = URL.createObjectURL(blob);
+  await recorder.stopRecording();
 
-    recorder.microphone.stop();
+  stream.stop();
 
-    audio.play();
-  });
+  return await recorder.getBlob();
 }
 
+// eslint-disable-next-line
 export default { start, stop };
