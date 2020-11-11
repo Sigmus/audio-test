@@ -14,16 +14,6 @@ function captureMicrophone(callback) {
     });
 }
 
-function stopRecordingCallback() {
-  audio.srcObject = null;
-  var blob = recorder.getBlob();
-  audio.src = URL.createObjectURL(blob);
-
-  recorder.microphone.stop();
-
-  audio.play();
-}
-
 function startRecording() {
   // this.disabled = true;
   captureMicrophone(function (microphone) {
@@ -49,7 +39,15 @@ function start() {
 }
 
 async function stop() {
-  recorder.stopRecording(stopRecordingCallback);
+  recorder.stopRecording(() => {
+    audio.srcObject = null;
+    var blob = recorder.getBlob();
+    audio.src = URL.createObjectURL(blob);
+
+    recorder.microphone.stop();
+
+    audio.play();
+  });
 }
 
 export default { start, stop };
