@@ -6,7 +6,8 @@ import RecordRTC, { StereoAudioRecorder } from "recordrtc";
 var recorder; // globally accessible
 
 function App() {
-  const audio = useRef();
+  // const audio = useRef();
+  const audio = new Audio(); // controls autoPlay playsInline
 
   function captureMicrophone(callback) {
     navigator.mediaDevices
@@ -19,17 +20,19 @@ function App() {
   }
 
   function stopRecordingCallback() {
-    audio.current.srcObject = null;
+    audio.srcObject = null;
     var blob = recorder.getBlob();
-    audio.current.src = URL.createObjectURL(blob);
+    audio.src = URL.createObjectURL(blob);
 
     recorder.microphone.stop();
+
+    // audio.play();
   }
 
   function startRecording() {
     // this.disabled = true;
     captureMicrophone(function (microphone) {
-      audio.current.srcObject = microphone;
+      audio.srcObject = microphone;
 
       recorder = RecordRTC(microphone, {
         type: "audio",
@@ -48,7 +51,7 @@ function App() {
 
   return (
     <div className="App">
-      <audio ref={audio} controls autoPlay playsInline></audio>
+      {/* <audio ref={audio} controls autoPlay playsInline></audio> */}
       <button onClick={() => startRecording()}>Start recording</button>
       <button onClick={() => recorder.stopRecording(stopRecordingCallback)}>
         Stop recording
