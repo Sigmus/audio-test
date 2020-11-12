@@ -6,7 +6,12 @@ import "./App.css";
 function App() {
   const audioRef = useRef();
 
-  const { isRecording, startRecording, stopRecording } = useAudioRecorder();
+  const {
+    isRecording,
+    startRecording,
+    stopRecording,
+    duration,
+  } = useAudioRecorder();
 
   return (
     <div className="App">
@@ -30,8 +35,30 @@ function App() {
           Stop recording
         </button>
       </section>
+
+      {duration > 0 && <h2>{calculateTimeDuration(duration)}</h2>}
     </div>
   );
+}
+
+function calculateTimeDuration(secs) {
+  var hr = Math.floor(secs / 3600);
+  var min = Math.floor((secs - hr * 3600) / 60);
+  var sec = Math.floor(secs - hr * 3600 - min * 60);
+
+  if (min < 10) {
+    min = "0" + min;
+  }
+
+  if (sec < 10) {
+    sec = "0" + sec;
+  }
+
+  if (hr <= 0) {
+    return min + ":" + sec;
+  }
+
+  return hr + ":" + min + ":" + sec;
 }
 
 export default App;

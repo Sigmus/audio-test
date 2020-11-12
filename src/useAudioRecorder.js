@@ -3,9 +3,12 @@ import { RecordRTCPromisesHandler, StereoAudioRecorder } from "recordrtc";
 
 let stream;
 let recorder;
+let dateStarted;
+let interval;
 
 export default function useAudioRecorder() {
   const [isRecording, setIsRecording] = useState(false);
+  const [duration, setDuration] = useState(0);
 
   async function init() {
     try {
@@ -28,16 +31,27 @@ export default function useAudioRecorder() {
     });
 
     recorder.startRecording();
+
+    dateStarted = new Date().getTime();
+
+    interval = setInterval(() => {
+      setDuration((new Date().getTime() - dateStarted) / 1000);
+    }, 1000);
+
     setIsRecording(true);
   }
 
   async function stopRecording() {
+    clearInterval(interval);
+
     await recorder.stopRecording();
+
     stream.stop();
+
     setIsRecording(false);
 
     return await recorder.getBlob();
   }
 
-  return { isRecording, startRecording, stopRecording };
+  return { isRecording, startRecording, stopRecording, duration };
 }
