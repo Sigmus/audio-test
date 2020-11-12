@@ -1,6 +1,6 @@
 import { useRef } from "react";
 
-import useAudioRecorder from "./recorder";
+import useAudioRecorder from "./useAudioRecorder";
 import "./App.css";
 
 function App() {
