@@ -11,11 +11,14 @@ function App() {
     startRecording,
     stopRecording,
     duration,
+    permission,
   } = useAudioRecorder();
 
   return (
     <div className="App">
       <audio ref={audioRef} controls playsInline></audio>
+
+      <h4>{permission}</h4>
 
       <section>
         <button disabled={isRecording} onClick={() => startRecording()}>

@@ -1,4 +1,3 @@
-import { get } from "https";
 import { useState } from "react";
 import { RecordRTCPromisesHandler, StereoAudioRecorder } from "recordrtc";
 
@@ -10,9 +9,9 @@ let interval;
 export default function useAudioRecorder() {
   const [isRecording, setIsRecording] = useState(false);
   const [duration, setDuration] = useState(0);
-  const [permission, setPermission] = useState("prompt");
+  const [permission, setPermission] = useState("pending"); // pending, prompt, grant, denied
 
-  async function initRecording() {
+  async function initMic() {
     try {
       const perms = await navigator.permissions.query({ name: "microphone" });
 
@@ -32,7 +31,7 @@ export default function useAudioRecorder() {
   }
 
   async function startRecording() {
-    await initRecording();
+    await initMic();
 
     recorder = new RecordRTCPromisesHandler(stream, {
       type: "audio",
@@ -64,7 +63,7 @@ export default function useAudioRecorder() {
   }
 
   return {
-    initRecording,
+    initMic,
     isRecording,
     startRecording,
     stopRecording,
