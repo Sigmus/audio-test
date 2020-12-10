@@ -13,12 +13,12 @@ export default function useAudioRecorder() {
 
   async function initMic() {
     try {
-      const perms = await navigator.permissions.query({ name: "microphone" });
+      // const perms = await navigator.permissions.query({ name: "microphone" });
 
-      if (perms.state === "denied") {
-        setPermission("denied");
-        return;
-      }
+      // if (perms.state === "denied") {
+      //   setPermission("denied");
+      //   return;
+      // }
 
       stream = await navigator.mediaDevices.getUserMedia({
         audio: true,

@@ -16,23 +16,34 @@ function App() {
 
   return (
     <div className="App">
-      <audio ref={audioRef} controls playsInline></audio>
+      <div style={{ display: "none" }}>
+        <audio ref={audioRef} controls playsInline></audio>
+      </div>
 
       <h4>{permission}</h4>
 
       <section>
+        <button
+          onClick={() => {
+            console.log("Playing it (still empty first time)");
+            audioRef.current.play();
+          }}
+        >
+          Click me first
+        </button>
+        <br />
+        <br />
+        <br />
         <button disabled={isRecording} onClick={() => startRecording()}>
           Start recording
         </button>
-
         <button
           disabled={!isRecording}
-          onClick={async () => {
-            const blob = await stopRecording();
-
-            console.log(blob);
-
-            audioRef.current.src = URL.createObjectURL(blob);
+          onClick={() => {
+            stopRecording().then((blob) => {
+              console.log(blob);
+              audioRef.current.src = URL.createObjectURL(blob);
+            });
           }}
         >
           Stop recording
