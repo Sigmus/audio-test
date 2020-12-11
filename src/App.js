@@ -1,10 +1,15 @@
-import { useRef } from "react";
+import { useRef, useEffect } from "react";
 
 import useAudioRecorder from "./useAudioRecorder";
 import "./App.css";
 
 function App() {
   const audioRef = useRef();
+
+  useEffect(() => {
+    const audioEl = new Audio();
+    audioRef.current = audioEl;
+  }, []);
 
   const {
     isRecording,
@@ -16,9 +21,9 @@ function App() {
 
   return (
     <div className="App">
-      <div style={{ display: "none" }}>
+      {/* <div style={{ display: "none" }}>
         <audio ref={audioRef} controls playsInline></audio>
-      </div>
+      </div> */}
 
       <h4>{permission}</h4>
 
